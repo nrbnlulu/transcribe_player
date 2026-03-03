@@ -192,6 +192,18 @@ class PlayerNotifier extends Notifier<PlayerState> {
     state = state.copyWith(position: position);
   }
 
+  void setRepeatStart(Duration pos) {
+    state = state.copyWith(repeatStart: pos);
+  }
+
+  void setRepeatEnd(Duration pos) {
+    state = state.copyWith(repeatEnd: pos);
+  }
+
+  void setRepeatRange(Duration start, Duration end) {
+    state = state.copyWith(repeatStart: start, repeatEnd: end);
+  }
+
   Stream<double> get pitchStream => _player.stream.pitch;
 }
 

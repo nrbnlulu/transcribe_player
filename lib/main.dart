@@ -8,6 +8,7 @@ import 'widgets/file_info_widget.dart';
 import 'widgets/repeat_controls_widget.dart';
 import 'widgets/speed_controls_widget.dart';
 import 'widgets/playback_controls_widget.dart';
+import 'widgets/global_timeline_widget.dart';
 import 'widgets/waveform_timeline_widget.dart';
 
 void main() {
@@ -86,6 +87,7 @@ class TranscribePlayerScreen extends HookConsumerWidget {
               flex: 6,
               child: Center(child: const PlaybackControlsWidget()),
             ),
+            GlobalTimelineWidget(onSeek: notifier.seekToPosition),
             WaveformTimelineWidget(onSeek: notifier.seekToPosition),
 
             const SizedBox(height: 16),
