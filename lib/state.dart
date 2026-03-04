@@ -188,6 +188,43 @@ class PlayerNotifier extends Notifier<PlayerState> {
   }
 
   Future<void> seekToPosition(Duration position) async {
+    // If in repeat mode and seeking outside the A-B range,
+    // shift the A-B range to center around the new position.
+    if (state.isRepeatActive &&
+        state.repeatStart != null &&
+        state.repeatEnd != null) {
+      final rangeStart = state.repeatStart!;
+      final rangeEnd = state.repeatEnd!;
+      final rangeDuration = rangeEnd - rangeStart;
+
+      // Check if the new position is outside the current A-B range
+      if (position < rangeStart || position > rangeEnd) {
+        // Calculate new A-B range centered on the seeked position
+        final halfRange = Duration(
+          milliseconds: rangeDuration.inMilliseconds ~/ 2,
+        );
+        var newStart = position - halfRange;
+        var newEnd = position + halfRange;
+
+        // Clamp to total duration bounds
+        if (newStart < Duration.zero) {
+          newStart = Duration.zero;
+          newEnd = newStart + rangeDuration;
+        }
+        if (newEnd > state.totalDuration) {
+          newEnd = state.totalDuration;
+          newStart = newEnd - rangeDuration;
+        }
+
+        // Ensure newStart doesn't go negative after clamping
+        if (newStart < Duration.zero) {
+          newStart = Duration.zero;
+        }
+
+        state = state.copyWith(repeatStart: newStart, repeatEnd: newEnd);
+      }
+    }
+
     await _player.seek(position);
     state = state.copyWith(position: position);
   }
