@@ -11,7 +11,6 @@ class PlayerState {
   final Duration? repeatStart;
   final Duration? repeatEnd;
   final bool isRepeatActive;
-  final bool isSettingRepeatStart;
   final String? fileName;
   final String? filePath;
 
@@ -23,7 +22,6 @@ class PlayerState {
     this.repeatStart,
     this.repeatEnd,
     this.isRepeatActive = false,
-    this.isSettingRepeatStart = false,
     this.fileName,
     this.filePath,
   });
@@ -39,7 +37,6 @@ class PlayerState {
     Object? repeatStart = _keep,
     Object? repeatEnd = _keep,
     bool? isRepeatActive,
-    bool? isSettingRepeatStart,
     Object? fileName = _keep,
     Object? filePath = _keep,
   }) {
@@ -55,7 +52,6 @@ class PlayerState {
           ? this.repeatEnd
           : repeatEnd as Duration?,
       isRepeatActive: isRepeatActive ?? this.isRepeatActive,
-      isSettingRepeatStart: isSettingRepeatStart ?? this.isSettingRepeatStart,
       fileName: identical(fileName, _keep)
           ? this.fileName
           : fileName as String?,
@@ -124,7 +120,6 @@ class PlayerNotifier extends Notifier<PlayerState> {
           repeatStart: null,
           repeatEnd: null,
           isRepeatActive: false,
-          isSettingRepeatStart: false,
           position: Duration.zero,
         );
         await _player.open(Media(path));
@@ -153,15 +148,11 @@ class PlayerNotifier extends Notifier<PlayerState> {
     if (!state.isRepeatActive) {
       state = state.copyWith(
         isRepeatActive: true,
-        isSettingRepeatStart: true,
-        repeatStart: null,
+        repeatStart: state.position,
         repeatEnd: null,
       );
-    } else if (state.isSettingRepeatStart) {
-      state = state.copyWith(
-        repeatStart: state.position,
-        isSettingRepeatStart: false,
-      );
+    } else if (state.repeatStart == null) {
+      state = state.copyWith(repeatStart: state.position);
     } else {
       var start = state.repeatStart;
       var end = state.position;
@@ -170,11 +161,7 @@ class PlayerNotifier extends Notifier<PlayerState> {
         start = end;
         end = tmp;
       }
-      state = state.copyWith(
-        repeatStart: start,
-        repeatEnd: end,
-        isSettingRepeatStart: false,
-      );
+      state = state.copyWith(repeatStart: start, repeatEnd: end);
     }
   }
 
@@ -183,8 +170,11 @@ class PlayerNotifier extends Notifier<PlayerState> {
       repeatStart: null,
       repeatEnd: null,
       isRepeatActive: false,
-      isSettingRepeatStart: false,
     );
+  }
+
+  void clearPointB() {
+    state = state.copyWith(repeatEnd: null);
   }
 
   Future<void> seekToPosition(Duration position) async {
