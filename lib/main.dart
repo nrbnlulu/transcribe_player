@@ -48,7 +48,6 @@ class TranscribePlayerScreen extends HookConsumerWidget {
     final isLoading = useState(false);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Transcribe Player'), centerTitle: true),
       body: SafeArea(
         child: Column(
           spacing: 10,
