@@ -2,7 +2,7 @@ name: transcribe_player
 description: "A new Flutter project."
 publish_to: "none"
 
-version: 0.0.1+1
+version: 1.0.0
 
 environment:
     sdk: ^3.11.0
@@ -15,8 +15,7 @@ dependencies:
 
     media_kit: ^1.2.6
     media_kit_libs_audio: ^1.0.7
-    file_picker: ^8.1.2
-    audio_video_progress_bar: ^2.0.3
+    file_picker: ^10.3.10
 
     # Path provider for file access
     path_provider: ^2.1.5
