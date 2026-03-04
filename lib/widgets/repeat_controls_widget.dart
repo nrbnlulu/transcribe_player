@@ -97,15 +97,24 @@ class RepeatControlsWidget extends HookConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'B: ${fmt(s.repeatEnd!)}',
+                    'B',
                     style: TextStyle(
                       fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    fmt(s.repeatEnd!),
+                    style: TextStyle(
+                      fontSize: 11,
                       color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
                   ),
